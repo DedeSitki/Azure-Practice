@@ -1,0 +1,20 @@
+trigger:
+- main  # Ana dalda yapılan her değişiklikte pipeline'ın tetiklenmesi
+
+pool:
+  vmImage: 'ubuntu-latest'  # Kullanılacak sanal makine görüntüsü
+
+steps:
+- script: echo Hello, world!  # Basit bir adım: "Hello, world!" çıktısını yazdırır
+  displayName: 'Print Hello World'  # Adımın açıklaması
+
+- task: CopyFiles@2  # Dosyaları kopyalamak için bir görev kullanılır
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'  # Kaynak klasör
+    Contents: '**'  # Tüm dosyaları kopyala
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'  # Hedef klasör
+
+- task: PublishBuildArtifacts@1  # Derleme sanal makinesinden dosyaları yayımlar
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'  # Yayımlanacak dosyaların yolu
+    ArtifactName: 'drop'  # Yayımlanan dosyaların adı
